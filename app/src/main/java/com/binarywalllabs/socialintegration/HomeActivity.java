@@ -19,15 +19,16 @@ import com.binarywalllabs.socialintegration.managers.SharedPreferenceManager;
 import com.binarywalllabs.socialintegration.model.UserModel;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     SimpleDraweeView simpleDraweeView;

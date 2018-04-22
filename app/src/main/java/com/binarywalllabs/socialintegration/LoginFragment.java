@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,27 +28,22 @@ import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment implements TwitterConnectHelper.OnTwitterSignInListener, FbConnectHelper.OnFbSignInListener, GooglePlusSignInHelper.OnGoogleSignInListener{
 
     private static final String TAG = LoginFragment.class.getSimpleName();
-    @Bind(R.id.progress_bar)
     ProgressBar progressBar;
-
-    @Bind(R.id.login_layout)
+    private View mView;
     LinearLayout view;
 
     private FbConnectHelper fbConnectHelper;
     private GooglePlusSignInHelper gSignInHelper;
     private TwitterConnectHelper twitterConnectHelper;
+    private ImageButton loginGoogleButton;
+    private ImageButton loginFacebookButton;
+    private ImageButton loginTwitterButton;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -63,14 +59,41 @@ public class LoginFragment extends Fragment implements TwitterConnectHelper.OnTw
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        mView = inflater.inflate(R.layout.fragment_login, container, false);
+        initUI();
+        return mView;
+    }
+    private void initUI(){
+        loginGoogleButton = (ImageButton)mView.findViewById(R.id.login_google);
+        loginGoogleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginwithGoogle(v);
+            }
+        });
+        progressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
+        view = (LinearLayout)mView.findViewById(R.id.login_layout);
+        loginFacebookButton = (ImageButton)mView.findViewById(R.id.login_facebook);
+        loginTwitterButton = (ImageButton)mView.findViewById(R.id.login_twitter);
+        loginFacebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginwithFacebook(v);
+            }
+        });
+
+        loginTwitterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginwithTwitter(v);
+            }
+        });
+
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-
         setup();
     }
 
@@ -81,21 +104,19 @@ public class LoginFragment extends Fragment implements TwitterConnectHelper.OnTw
 
         fbConnectHelper = new FbConnectHelper(this,this);
         twitterConnectHelper = new TwitterConnectHelper(getActivity(), this);
+
     }
 
-    @OnClick(R.id.login_google)
     public void loginwithGoogle(View view) {
         gSignInHelper.signIn(getActivity());
         setBackground(R.color.g_color);
     }
 
-    @OnClick(R.id.login_facebook)
     public void loginwithFacebook(View view) {
         fbConnectHelper.connect();
         setBackground(R.color.fb_color);
     }
 
-    @OnClick(R.id.login_twitter)
     public void loginwithTwitter(View view) {
         twitterConnectHelper.connect();
         setBackground(R.color.twitter_color);
